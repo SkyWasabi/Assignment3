@@ -21,10 +21,15 @@ public class MainActivity extends AppCompatActivity {
         Collection collection1 = new Collection("A");
         Collection collection2 = new Collection("B");
 
-        long collectid1 = 0;
-
-        collectid1 = model.createNewCollection(collection1);
+        long collectid1 = model.createNewCollection(collection1);
         long collectid2 = model.createNewCollection(collection2);
+
+        Log.d("Collection count", "Collection count: " + model.getallcollection().size());
+
+        List<Collection> collections = model.getallcollection();
+        for (Collection collection : collections) {
+            Log.d("Collection name", collection.getName());
+        }
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -42,19 +47,47 @@ public class MainActivity extends AppCompatActivity {
         long clippingid2 = model.createNewClipping(clipping2);
         long clippingid3 = model.createNewClipping(clipping3);
 
-        Log.d("Collection count", "Collection count: " + model.getallcollection().size());
+
         Log.d("Clipping count", "Clipping count: " + model.getallClipping().size());
+
+        List<Clipping> clippings = model.getallClipping();
+        for (Clipping clipping : clippings) {
+            Log.d("Clipping note", clipping.getNotes());
+            Log.d("Drawable ID", String.valueOf(clipping.getDrawableid()));
+            Log.d("Date", clipping.getDate());
+        }
 
         model.AddClipping(model.getallClipping().get(0), collectid1);
         model.AddClipping(model.getallClipping().get(1), collectid1);
 
 
         Log.d("Clipping count from A", "Clipping count: " + model.getClippingBasedOnCollection(collectid1).size());
+        List<Clipping> clippings1 = model.getClippingBasedOnCollection(collectid1);
+        for (Clipping clipping : clippings1) {
+            Log.d("Clipping note", clipping.getNotes());
+            Log.d("Drawable ID", String.valueOf(clipping.getDrawableid()));
+            Log.d("Date", clipping.getDate());
+        }
+
+        model.DeleteClipping(clippingid1);
+
+        List<Clipping> clippings2 = model.getClippingBasedOnCollection(collectid1);
+        for (Clipping clipping : clippings1) {
+            Log.d("Clipping note", clipping.getNotes());
+            Log.d("Drawable ID", String.valueOf(clipping.getDrawableid()));
+            Log.d("Date", clipping.getDate());
+        }
 
         List<Clipping> search = model.searchfunc("bar");
         List<Clipping> searchcol = model.searchfromcollection("foo", collectid1);
 
         Log.d("Search count", String.valueOf(search.size()));
+
+        for (Clipping clipping : search) {
+            Log.d("Clipping note", clipping.getNotes());
+            Log.d("Drawable ID", String.valueOf(clipping.getDrawableid()));
+            Log.d("Date", clipping.getDate());
+        }
 
         model.DeleteCollection(collectid1, true);
         model.DeleteCollection(collectid2, false);
