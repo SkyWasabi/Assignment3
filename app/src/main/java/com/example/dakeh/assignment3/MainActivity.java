@@ -7,6 +7,7 @@ import android.widget.CalendarView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,7 +21,9 @@ public class MainActivity extends AppCompatActivity {
         Collection collection1 = new Collection("A");
         Collection collection2 = new Collection("B");
 
-        long collectid1 = model.createNewCollection(collection1);
+        long collectid1 = 0;
+
+        collectid1 = model.createNewCollection(collection1);
         long collectid2 = model.createNewCollection(collection2);
 
         Calendar calendar = Calendar.getInstance();
@@ -31,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
         int drawid2 = R.drawable.cathedral;
         int drawid3 = R.drawable.lake;
 
-        Clipping clipping1 = new Clipping("1 foo", drawid1, date, 0);
-        Clipping clipping2 = new Clipping("2 foo", drawid2, date, 0);
-        Clipping clipping3 = new Clipping("3 bar", drawid3, date, 0);
+        Clipping clipping1 = new Clipping("1 foo", drawid1, date);
+        Clipping clipping2 = new Clipping("2 foo", drawid2, date);
+        Clipping clipping3 = new Clipping("3 bar", drawid3, date);
 
         long clippingid1 = model.createNewClipping(clipping1);
         long clippingid2 = model.createNewClipping(clipping2);
@@ -42,12 +45,22 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Collection count", "Collection count: " + model.getallcollection().size());
         Log.d("Clipping count", "Clipping count: " + model.getallClipping().size());
 
-        clipping1.setFkid(collectid1);
-        clipping2.setFkid(collectid1);
+        model.AddClipping(model.getallClipping().get(0), collectid1);
+        model.AddClipping(model.getallClipping().get(1), collectid1);
 
-        long update1 = model.AddClipping(clipping1);
-        long update2 = model.AddClipping(clipping2);
 
         Log.d("Clipping count from A", "Clipping count: " + model.getClippingBasedOnCollection(collectid1).size());
+
+        List<Clipping> search = model.searchfunc("bar");
+        List<Clipping> searchcol = model.searchfromcollection("foo", collectid1);
+
+        Log.d("Search count", String.valueOf(search.size()));
+
+        model.DeleteCollection(collectid1, true);
+        model.DeleteCollection(collectid2, false);
+
+        model.DeleteClipping(clippingid3);
+
+        model.closeDB();
     }
 }
