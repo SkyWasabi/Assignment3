@@ -3,6 +3,7 @@ package com.example.dakeh.assignment3;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -46,6 +47,14 @@ public class ScrapbookModel extends SQLiteOpenHelper{
     private static final String dropcollectionifexist = "DROP TABLE IF EXISTS " + CollectionContract.CollectionEntry.TABLE_NAME;
 
     private static final String dropclippingifexist = "DROP TABLE IF EXISTS " + ClippingContract.ClippingEntry.TABLE_NAME;
+
+    private static ScrapbookModel instance;
+
+    public static synchronized ScrapbookModel getHelper(Context context) {
+        if (instance == null)
+            instance = new ScrapbookModel(context);
+        return instance;
+    }
 
     public ScrapbookModel(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

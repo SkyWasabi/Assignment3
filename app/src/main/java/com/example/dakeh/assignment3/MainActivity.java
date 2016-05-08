@@ -1,22 +1,35 @@
 package com.example.dakeh.assignment3;
 
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.widget.CalendarView;
+import android.widget.ListView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Handler;
 
 public class MainActivity extends AppCompatActivity {
+
+    Fragment contentFragment;
+    CollectionListFragment collectionListFragment;
+    FragmentManager fm = getSupportFragmentManager();
+    ScrapbookModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ScrapbookModel model = new ScrapbookModel(getApplicationContext());
+        model = new ScrapbookModel(getApplicationContext());
 
         Collection collection1 = new Collection("A");
         Collection collection2 = new Collection("B");
@@ -94,6 +107,35 @@ public class MainActivity extends AppCompatActivity {
 
         model.DeleteClipping(clippingid3);
 
+        FragmentManager fm = getSupportFragmentManager();
+
+        collectionListFragment = new CollectionListFragment();
+
+        showDialog();
+
         model.closeDB();
+
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+// Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.display_list, menu);
+        return true;
+    }
+
+    public List<Collection> getcollection() {
+        return model.getallcollection();
+    }
+
+    public void showDialog() {
+        AlertDialogFragment collist = new AlertDialogFragment();
+        collist.show(fm, "Alert Dialog Fragment");
+    }
+
+    protected void setFragmentTitle(int resourseId) {
+        setTitle(resourseId);
+        getActionBar().setTitle(resourseId);
+
+    }
+
 }
